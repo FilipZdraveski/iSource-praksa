@@ -222,28 +222,25 @@
 
             // Add scroll direction detection
             let lastScroll = 0;
-            let scrollThreshold = 50; // Minimum scroll amount before hiding/showing
+            let scrollThreshold = 50;
             
             window.addEventListener('scroll', function() {
                 const currentScroll = window.pageYOffset;
                 
-                // Don't do anything if we're at the top
                 if (currentScroll <= 0) {
                     nav.classList.remove('nav-hidden');
                     return;
                 }
                 
-                // Check if we've scrolled more than the threshold
                 if (Math.abs(currentScroll - lastScroll) < scrollThreshold) {
                     return;
                 }
-                
-                // Hide/show based on scroll direction
+                 
                 if (currentScroll > lastScroll) {
-                    // Scrolling down
+                    
                     nav.classList.add('nav-hidden');
                 } else {
-                    // Scrolling up
+                    
                     nav.classList.remove('nav-hidden');
                 }
                 
@@ -257,14 +254,12 @@
                 overlay.classList.toggle('active');
             });
 
-            // Close sidebar when clicking overlay
             overlay.addEventListener('click', function() {
                 hamburger.classList.remove('active');
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
 
-            // Close sidebar when clicking a link
             sidebarLinks.forEach(link => {
                 link.addEventListener('click', function() {
                     hamburger.classList.remove('active');
@@ -273,7 +268,6 @@
                 });
             });
 
-            // Update active links on scroll
             function updateActiveLinks() {
                 const fromTop = window.scrollY + 100;
 
