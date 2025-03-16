@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Matching Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .game-board {
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .card {
+            width: 150px;
+            height: 150px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .timer-container {
+            max-width: 400px;
+            margin: 1rem auto;
+        }
+
+        .timer-header {
+            background-color: #0d6efd;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .timer-value {
+            border: 1px solid #dee2e6;
+            padding: 0.5rem;
+            border-radius: 0 0 5px 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container text-center">
+        <h1 class="my-4">Face matching game</h1>
+        <h5 class="text-muted mb-4">Match the faces before time runs out!</h5>
+
+        <div class="timer-container">
+            <div class="timer-header">
+                Time Remaining
+            </div>
+            <div class="timer-value">
+                <span id="timer">/</span>
+            </div>
+        </div>
+
+        <div class="game-board">
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+                <div class="col-auto">
+                    <div class="card"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="difficultyModal" tabindex="-1" aria-labelledby="difficultyModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="difficultyModalLabel">Welcome to the image matching game!</h5>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Please select what difficulty you would like to play on</p>
+                    <div class="d-flex justify-content-center gap-2 mb-3">
+                        <button class="btn btn-success" data-difficulty="easy">Easy</button>
+                        <button class="btn btn-warning" data-difficulty="normal">Normal</button>
+                        <button class="btn btn-danger" data-difficulty="hard">Hard</button>
+                    </div>
+                    <button class="btn btn-primary w-100" id="beginButton">Begin</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const difficultyModal = new bootstrap.Modal(document.getElementById('difficultyModal'), {
+                backdrop: 'static',
+                keyboard: true
+            });
+            difficultyModal.show();
+
+            let selectedDifficulty = null;
+            const difficultyButtons = document.querySelectorAll('[data-difficulty]');
+            difficultyButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    difficultyButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedDifficulty = this.dataset.difficulty;
+                });
+            });
+
+            document.getElementById('beginButton').addEventListener('click', function () {
+                if (selectedDifficulty) {
+                    difficultyModal.hide();
+                    setupGameBoard(selectedDifficulty);
+                    startGame(selectedDifficulty);
+                } else {
+                    alert('Please select a difficulty level first!');
+                }
+            });
+        });
+
+        function setupGameBoard(difficulty) {
+            const gameBoard = document.querySelector('.game-board');
+            const rows = gameBoard.querySelectorAll('.row');
+
+            rows.forEach(row => row.style.display = 'none');
+
+            switch (difficulty) {
+                case 'easy':
+                    rows[0].style.display = 'flex';
+                    break;
+                case 'normal':
+                    rows[0].style.display = 'flex';
+                    rows[1].style.display = 'flex';
+                    break;
+                case 'hard':
+                    rows[0].style.display = 'flex';
+                    rows[1].style.display = 'flex';
+                    rows[2].style.display = 'flex';
+                    break;
+            }
+        }
+
+        function startGame(difficulty) {
+            console.log(`Starting game with ${difficulty} difficulty`);
+            let timeLimit;
+            switch (difficulty) {
+                case 'easy':
+                    timeLimit = 30;
+                    break;
+                case 'normal':
+                    timeLimit = 45;
+                    break;
+                case 'hard':
+                    timeLimit = 60;
+                    break;
+            }
+
+            const images = [
+                'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=1',
+                'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=2',
+                'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=3',
+                'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=4',
+                'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=5',
+                'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=6'
+            ];
+
+            const cards = Array.from(document.querySelectorAll('.card')).filter(
+                card => card.parentElement.parentElement.style.display !== 'none'
+            );
+
+            const numPairs = cards.length / 2;
+            const selectedImages = images.slice(0, numPairs);
+            let cardImages = [...selectedImages, ...selectedImages];
+
+            cardImages.sort(() => Math.random() - 0.5);
+
+            let firstCard = null;
+            let secondCard = null;
+            let canFlip = true;
+
+            cards.forEach((card, index) => {
+                const img = document.createElement('img');
+                img.src = cardImages[index];
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.display = 'none';
+                card.appendChild(img);
+
+                card.addEventListener('click', () => {
+                    if (!canFlip || card.classList.contains('matched') || img.style.display === 'block') return;
+
+                    img.style.display = 'block';
+
+                    if (!firstCard) {
+                        firstCard = { card, img };
+                    } else {
+                        secondCard = { card, img };
+                        canFlip = false;
+
+                        if (firstCard.img.src === secondCard.img.src) {
+                            firstCard.card.classList.add('matched');
+                            secondCard.card.classList.add('matched');
+                            firstCard = null;
+                            secondCard = null;
+                            canFlip = true;
+
+                            const allMatched = cards.every(card => card.classList.contains('matched'));
+                            if (allMatched) {
+                                clearInterval(countdown);
+                                setTimeout(() => alert('Congratulations! You won!'), 500);
+                            }
+                        } else {
+
+                            setTimeout(() => {
+                                firstCard.img.style.display = 'none';
+                                secondCard.img.style.display = 'none';
+                                firstCard = null;
+                                secondCard = null;
+                                canFlip = true;
+                            }, 500);
+                        }
+                    }
+                });
+            });
+
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = timeLimit;
+
+            const countdown = setInterval(() => {
+                timeLimit--;
+                timerElement.textContent = timeLimit;
+
+                if (timeLimit == -1) {
+                    clearInterval(countdown);
+                    alert('Time is up!');
+                }
+            }, 1000);
+        }
+
+    </script>
+</body>
+
+</html>
