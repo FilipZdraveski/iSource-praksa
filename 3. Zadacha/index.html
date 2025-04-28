@@ -1,1 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="container">
+        <div id="header">
+            <div class="header-content">
+                <button id="backButton" class="nav-arrow">&lt;</button>
+                <div id="monthDisplay"></div>
+                <button id="nextButton" class="nav-arrow">&gt;</button>
+            </div>
+            <div class="header-controls">
+                <button class="toggle-btn active" data-view="month">Month</button>
+                <button class="toggle-btn" data-view="week">Week</button>
+                <button class="toggle-btn" data-view="day">Day</button>
+            </div>
+        </div>
+
+        <div id="weekdays">
+            <div>Sunday</div>
+            <div>Monday</div>
+            <div>Tuesday</div>
+            <div>Wednesday</div>
+            <div>Thursday</div>
+            <div>Friday</div>
+            <div>Saturday</div>
+        </div>
+
+        <div id="calendar"></div>
+    </div>
+
+    <div id="newEventModal">
+        <div class="modal-content">
+            <h2>New Event</h2>
+            <div class="modal-body">
+                <input id="eventTitle" placeholder="What's the event?" />
+                <input type="time" id="eventTime" class="time-input" />
+                <div class="modal-actions">
+                    <button id="saveButton" class="modal-btn primary">Save</button>
+                    <button id="cancelButton" class="modal-btn secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteEventModal">
+        <div class="modal-content">
+            <h2>Event</h2>
+            <div class="modal-body">
+                <h4 id="eventText"></h4>
+                <p id="eventTimeDisplay"></p>
+                <div class="modal-actions">
+                    <button id="deleteButton" class="modal-btn danger">Delete</button>
+                    <button id="editButton" class="modal-btn secondary">Edit</button>
+                    <button id="closeButton" class="modal-btn secondary">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalBackDrop"></div>
+
+
+    <script src="./script.js"></script>
+</body>
+
+</html>
