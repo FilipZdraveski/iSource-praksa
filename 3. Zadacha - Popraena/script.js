@@ -312,13 +312,16 @@ function saveEvent() {
     if (eventTitle.value) {
         eventTitle.classList.remove('error');
 
-        if (isEditing && typeof clicked === 'object' && clicked.eventIndex !== undefined) {
+        if (isEditing) {
             // Update existing event
-            events[clicked.eventIndex] = {
-                date: clicked.date,
-                title: eventTitle.value,
-                time: eventTime.value
-            };
+            const eventIndex = typeof clicked === 'object' ? clicked.eventIndex : events.findIndex(e => e.date === clicked);
+            if (eventIndex !== -1) {
+                events[eventIndex] = {
+                    date: typeof clicked === 'object' ? clicked.date : clicked,
+                    title: eventTitle.value,
+                    time: eventTime.value
+                };
+            }
         } else {
             // Add new event
             events.push({
@@ -338,12 +341,10 @@ function saveEvent() {
 function editEvent() {
     if (eventTitle.value) {
         eventTitle.classList.remove('error');
-        // Find the event to edit
-        const eventIndex = events.findIndex(e => e.date === clicked);
+        const eventIndex = typeof clicked === 'object' ? clicked.eventIndex : events.findIndex(e => e.date === clicked);
         if (eventIndex !== -1) {
-            // Update the event
             events[eventIndex] = {
-                date: clicked,
+                date: typeof clicked === 'object' ? clicked.date : clicked,
                 title: eventTitle.value,
                 time: eventTime.value
             };
