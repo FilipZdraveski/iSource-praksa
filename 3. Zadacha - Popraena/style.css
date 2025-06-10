@@ -678,10 +678,13 @@ body {
     color: #5f6caf;
     font-family: inherit;
     font-weight: 600;
+    text-align: center;
+    width: 100%;
 }
 
 .date-picker::-webkit-datetime-edit-fields-wrapper {
     padding: 0;
+    text-align: center;
 }
 
 .date-picker:hover {
